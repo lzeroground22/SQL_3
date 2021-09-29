@@ -1,23 +1,23 @@
---количество исполнителей в каждом жанре;
+--РєРѕР»РёС‡РµСЃС‚РІРѕ РёСЃРїРѕР»РЅРёС‚РµР»РµР№ РІ РєР°Р¶РґРѕРј Р¶Р°РЅСЂРµ;
 select genre_id , count(genre_id) from artists_genres ag 
 	group by genre_id
 	order by genre_id asc;
 	
 
---количество треков, вошедших в альбомы 2019-2020 годов;
+--РєРѕР»РёС‡РµСЃС‚РІРѕ С‚СЂРµРєРѕРІ, РІРѕС€РµРґС€РёС… РІ Р°Р»СЊР±РѕРјС‹ 2019-2020 РіРѕРґРѕРІ;
 select count(album_id), year from tracks t 
 	join albums_titles at2 on t.album_id = at2.id 
 	group by year
 	having year between 2019 and 2020;
 
 
---средняя продолжительность треков по каждому альбому;
+--СЃСЂРµРґРЅСЏСЏ РїСЂРѕРґРѕР»Р¶РёС‚РµР»СЊРЅРѕСЃС‚СЊ С‚СЂРµРєРѕРІ РїРѕ РєР°Р¶РґРѕРјСѓ Р°Р»СЊР±РѕРјСѓ;
 select album_id, round(avg(time), 2)  from tracks t 
 group by album_id
 order by album_id asc;
 
 
---все исполнители, которые не выпустили альбомы в 2020 году;
+--РІСЃРµ РёСЃРїРѕР»РЅРёС‚РµР»Рё, РєРѕС‚РѕСЂС‹Рµ РЅРµ РІС‹РїСѓСЃС‚РёР»Рё Р°Р»СЊР±РѕРјС‹ РІ 2020 РіРѕРґСѓ;
 select artist_id, year from albums_artists aa 
 	join albums_titles at2 on aa.album_id = at2.id
 	group by artist_id, year 
@@ -25,7 +25,7 @@ select artist_id, year from albums_artists aa
 	order by artist_id asc;
 
 
---названия сборников, в которых присутствует конкретный исполнитель (выберите сами);
+--РЅР°Р·РІР°РЅРёСЏ СЃР±РѕСЂРЅРёРєРѕРІ, РІ РєРѕС‚РѕСЂС‹С… РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РєРѕРЅРєСЂРµС‚РЅС‹Р№ РёСЃРїРѕР»РЅРёС‚РµР»СЊ (РІС‹Р±РµСЂРёС‚Рµ СЃР°РјРё);
 select ct.title from compilation_titles ct 
 	join tracklists t on ct.id = t.compilation_titles_id 
 	join tracks t2 on t.track_id = t2.id 
@@ -36,7 +36,7 @@ select ct.title from compilation_titles ct
 	group by ct.title;
 
 
---название альбомов, в которых присутствуют исполнители более 1 жанра;
+--РЅР°Р·РІР°РЅРёРµ Р°Р»СЊР±РѕРјРѕРІ, РІ РєРѕС‚РѕСЂС‹С… РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‚ РёСЃРїРѕР»РЅРёС‚РµР»Рё Р±РѕР»РµРµ 1 Р¶Р°РЅСЂР°;
 select at2."name", count(ag.genre_id) from albums_titles at2 
 	join albums_artists aa on at2.id = aa.album_id 
 	join artists_names an on aa.artist_id = an.id 
@@ -46,14 +46,14 @@ select at2."name", count(ag.genre_id) from albums_titles at2
 	order by count(ag.genre_id) desc;
 
 
---наименование треков, которые не входят в сборники;
+--РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚СЂРµРєРѕРІ, РєРѕС‚РѕСЂС‹Рµ РЅРµ РІС…РѕРґСЏС‚ РІ СЃР±РѕСЂРЅРёРєРё;
 select t.title from tracks t 
 	left join tracklists t2 on t.id = t2.track_id 
 	where t2.compilation_titles_id is NULL
 	order by t.id asc;
 	
 
---исполнителя(-ей), написавшего самый короткий по продолжительности трек (теоретически таких треков может быть несколько);
+--РёСЃРїРѕР»РЅРёС‚РµР»СЏ(-РµР№), РЅР°РїРёСЃР°РІС€РµРіРѕ СЃР°РјС‹Р№ РєРѕСЂРѕС‚РєРёР№ РїРѕ РїСЂРѕРґРѕР»Р¶РёС‚РµР»СЊРЅРѕСЃС‚Рё С‚СЂРµРє (С‚РµРѕСЂРµС‚РёС‡РµСЃРєРё С‚Р°РєРёС… С‚СЂРµРєРѕРІ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ);
 select an."name", min(t."time") from artists_names an 
 	join albums_artists aa on an.id = aa.artist_id 
 	join albums_titles at2 on aa.album_id = at2.id 
@@ -63,7 +63,7 @@ select an."name", min(t."time") from artists_names an
 	limit 1;
 
 
---название альбомов, содержащих наименьшее количество треков.
+--РЅР°Р·РІР°РЅРёРµ Р°Р»СЊР±РѕРјРѕРІ, СЃРѕРґРµСЂР¶Р°С‰РёС… РЅР°РёРјРµРЅСЊС€РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚СЂРµРєРѕРІ.
 select count(t.album_id), t.album_id, at2."name" from albums_titles at2 
 	join tracks t on at2.id = t.album_id 
 	group by t.album_id, at2."name" 
